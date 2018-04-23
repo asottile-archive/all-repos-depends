@@ -79,3 +79,20 @@ Reads the `name` field out of an npm `package.json` file.
 A `depends` provider will be called while the `cwd` is at the root of the
 repository.  It must return a sequence or `all_repos_depends.types.Depends`
 that the repository provides (or an empty sequence if it is not applicable).
+
+#### `all_repos_depends.depends.setup_py`
+
+This `depends` provider reads the ast of `setup.py` and searches for the
+`install_requires` keyword argument.
+
+#### `all_repos_depends.depends.requirements_tools`
+
+This `depends` provider reads the following requirements files according to
+the conventions for
+[requirements-tools](https://github.com/Yelp/requirements-tools):
+
+- `requirements-minimal.txt` (`DEPENDS`)
+- `requirements.txt` (`REQUIRES`)
+- `requirements-dev-minimal.txt` (`DEPENDS_DEV`)
+- `requirements-dev.txt` ('REQUIRES_DEV` if `-minimal` is present otherwise
+  `DEPENDS_DEV`)
