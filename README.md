@@ -94,5 +94,5 @@ the conventions for
 - `requirements-minimal.txt` (`DEPENDS`)
 - `requirements.txt` (`REQUIRES`)
 - `requirements-dev-minimal.txt` (`DEPENDS_DEV`)
-- `requirements-dev.txt` ('REQUIRES_DEV` if `-minimal` is present otherwise
+- `requirements-dev.txt` (`REQUIRES_DEV` if `-minimal` is present otherwise
   `DEPENDS_DEV`)
