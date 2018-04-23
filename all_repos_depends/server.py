@@ -116,7 +116,7 @@ def package_rdepends(db, pkgname):
     return [(repo_name, Depends(*row)) for repo_name, *row in rows]
 
 
-@app.route('/pkg/<pkgname>')
+@app.route('/pkg/<path:pkgname>')
 def pkg(pkgname):
     with sqlite3.connect(app.database_path) as db:
         repo_names = package_repo_names(db, pkgname)
