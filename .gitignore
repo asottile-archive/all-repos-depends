@@ -1,0 +1,8 @@
+*.egg-info
+*.pyc
+/database.db
+/database.db.old
+/.pytest_cache
+/.coverage
+/.tox
+/venv*
