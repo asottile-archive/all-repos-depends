@@ -1,6 +1,7 @@
 import argparse
 import os.path
 import sqlite3
+import tempfile
 import traceback
 
 from all_repos.autofix_lib import cwd
@@ -94,16 +95,19 @@ def main(argv=None):
         for error in info.errors:
             errors_rows.append((info.name, error))
 
-    with sqlite3.connect(args.database) as db:
-        create_schema(db)
-        query = 'INSERT INTO repos VALUES (?)'
-        db.executemany(query, repos_rows)
-        query = 'INSERT INTO packages VALUES (?, ?, ?, ?)'
-        db.executemany(query, packages_rows)
-        query = 'INSERT INTO depends VALUES (?, ?, ?, ?, ?)'
-        db.executemany(query, depends_rows)
-        query = 'INSERT INTO errors VALUES (?, ?)'
-        db.executemany(query, errors_rows)
+    dirname = os.path.dirname(args.database)
+    with tempfile.NamedTemporaryFile(dir=dirname, delete=False) as tmpf:
+        with sqlite3.connect(tmpf.name) as db:
+            create_schema(db)
+            query = 'INSERT INTO repos VALUES (?)'
+            db.executemany(query, repos_rows)
+            query = 'INSERT INTO packages VALUES (?, ?, ?, ?)'
+            db.executemany(query, packages_rows)
+            query = 'INSERT INTO depends VALUES (?, ?, ?, ?, ?)'
+            db.executemany(query, depends_rows)
+            query = 'INSERT INTO errors VALUES (?, ?)'
+            db.executemany(query, errors_rows)
+        os.rename(tmpf.name, args.database)
 
 
 if __name__ == '__main__':
