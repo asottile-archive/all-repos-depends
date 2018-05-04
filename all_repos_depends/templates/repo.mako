@@ -18,7 +18,7 @@
     <ul>
         %for depend in depends:
             <li>
-                <a href="/pkg/${depend.package_key}">
+                <a href="/pkg/${depend.package_key}.htm">
                     ${depend.package_key}${depend.spec}
                 </a>
                 (${depend.relationship})
@@ -33,7 +33,7 @@
     <ul>
         %for name, depend in rdepends:
             <li>
-                <a href="/repo/${name}">${name}</a>
+                <a href="/repo/${name}.htm">${name}</a>
                 ${depend.package_key}${depend.spec} (${depend.relationship})
             </li>
         %endfor

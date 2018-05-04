@@ -82,7 +82,7 @@ def repo_rdepends(db, repo_name):
     return [(repo_name, Depends(*row)) for repo_name, *row in rows]
 
 
-@app.route('/repo/<path:repo_name>')
+@app.route('/repo/<path:repo_name>.htm')
 def repo(repo_name):
     repo_name = repo_name.rstrip('/')
 
@@ -116,7 +116,7 @@ def package_rdepends(db, pkgname):
     return [(repo_name, Depends(*row)) for repo_name, *row in rows]
 
 
-@app.route('/pkg/<path:pkgname>')
+@app.route('/pkg/<path:pkgname>.htm')
 def pkg(pkgname):
     with sqlite3.connect(app.database_path) as db:
         repo_names = package_repo_names(db, pkgname)
@@ -146,6 +146,7 @@ def main(argv=None):  # pragma: no cover (never returns)
     kwargs = {'port': args.port, 'debug': args.debug}
     if not args.debug:
         kwargs['processes'] = args.processes
+        kwargs['threaded'] = False
 
     app.run('0.0.0.0', **kwargs)
 

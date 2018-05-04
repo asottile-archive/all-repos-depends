@@ -13,21 +13,21 @@ search: <input id="search">
 <h2>repos</h2>
 <div id="repos">
     %for repo in repos:
-        <div><a href="/repo/${repo}">${repo}</a></div>
+        <div><a href="/repo/${repo}.htm">${repo}</a></div>
     %endfor
 </div>
 
 <h2>packages</h2>
 <div id="packages">
     %for package in packages:
-        <div><a href="/pkg/${package}">${package}</a></div>
+        <div><a href="/pkg/${package}.htm">${package}</a></div>
     %endfor
 </div>
 
 <h2>external packages</h2>
 <div id="external">
     %for package in external:
-        <div><a href="/pkg/${package}">${package}</a></div>
+        <div><a href="/pkg/${package}.htm">${package}</a></div>
     %endfor
 </div>
 
@@ -46,7 +46,7 @@ search: <input id="search">
     }
 
     function link(base, s) {
-        return '<div><a href="/' + base + '/' + s + '">' + s + '</a></div>';
+        return '<div><a href="/' + base + '/' + s + '.htm">' + s + '</a></div>';
     }
 
     function toHtml(base, arr, needle) {
