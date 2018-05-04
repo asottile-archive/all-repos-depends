@@ -84,15 +84,15 @@ def test_package_rdepends(db):
 def test_pkg_redirect():
     resp = pyquery.PyQuery(server.pkg('pkg1'))
     meta = resp.find('meta[http-equiv="refresh"]')
-    assert meta.attr('content') == '0;/repo/r1'
+    assert meta.attr('content') == '0;/repo/r1.htm'
 
 
 def test_pkg_disambituate():
     resp = pyquery.PyQuery(server.pkg('pkg2'))
     repo_links = resp.find('a[href^="/repo/"]')
     assert len(repo_links) == 2
-    assert repo_links.eq(0).attr('href') == '/repo/r2'
-    assert repo_links.eq(1).attr('href') == '/repo/r5'
+    assert repo_links.eq(0).attr('href') == '/repo/r2.htm'
+    assert repo_links.eq(1).attr('href') == '/repo/r5.htm'
 
 
 def test_pkg_external():
