@@ -1,6 +1,7 @@
 import ast
 import json
 import os.path
+from typing import Optional
 
 from packaging.utils import canonicalize_name
 
@@ -13,7 +14,7 @@ from all_repos_depends.types import Package
 class FindsPackageName(ast.NodeVisitor):
     name = None
 
-    def visit_Call(self, node):
+    def visit_Call(self, node: ast.Call) -> None:
         if python.node_is_setup_call(node):
             for kwd in node.keywords:
                 if kwd.arg == 'name' and isinstance(kwd.value, ast.Str):
@@ -22,7 +23,7 @@ class FindsPackageName(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def setup_py():
+def setup_py() -> Optional[Package]:
     if not os.path.exists('setup.py'):
         return None
 
@@ -38,7 +39,7 @@ def setup_py():
         raise DependsError('Had setup.py but could not determine name')
 
 
-def package_json():
+def package_json() -> Optional[Package]:
     if not os.path.exists('package.json'):
         return None
 

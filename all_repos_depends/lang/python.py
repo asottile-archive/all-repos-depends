@@ -1,5 +1,6 @@
 import ast
 import os.path
+from typing import Iterable
 
 from packaging.requirements import InvalidRequirement
 from packaging.requirements import Requirement
@@ -11,11 +12,11 @@ from all_repos_depends.types import Depends
 NAME = 'python'
 
 
-def to_name(s):
+def to_name(s: str) -> str:
     return s.lower().replace('_', '-')
 
 
-def load_setup_py_ast():
+def load_setup_py_ast() -> ast.AST:
     with open('setup.py', 'rb') as f:
         try:
             return ast.parse(f.read(), filename='setup.py')
@@ -23,7 +24,7 @@ def load_setup_py_ast():
             raise DependsError('Had setup.py but could not be parsed')
 
 
-def node_is_setup_call(node):
+def node_is_setup_call(node: ast.Call) -> bool:
     return (
         # setup(
         (isinstance(node.func, ast.Name) and node.func.id == 'setup') or
@@ -37,7 +38,7 @@ def node_is_setup_call(node):
     )
 
 
-def to_depends(relationship, requirement_s):
+def to_depends(relationship: str, requirement_s: str) -> Depends:
     try:
         req = Requirement(requirement_s)
     except InvalidRequirement:
@@ -55,7 +56,7 @@ def to_depends(relationship, requirement_s):
     return Depends(relationship, NAME, canonicalize_name(req.name), spec)
 
 
-def from_reqs_file(relationship, filename):
+def from_reqs_file(relationship: str, filename: str) -> Iterable[Depends]:
     with open(filename) as f:
         for line in f:
             line, _, _ = line.partition('#')
