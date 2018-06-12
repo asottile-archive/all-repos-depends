@@ -1,5 +1,11 @@
 import argparse
 import sqlite3
+from typing import Any
+from typing import List
+from typing import NoReturn
+from typing import Optional
+from typing import Sequence
+from typing import Tuple
 
 import flask
 import mako.lookup
@@ -19,22 +25,22 @@ template_lookup = mako.lookup.TemplateLookup(
 )
 
 
-def render_template(template_name, **env):
+def render_template(template_name: str, **env: Any) -> str:
     template = template_lookup.get_template(template_name)
     return template.render(**env)
 
 
-def list_repos(db):
+def list_repos(db: sqlite3.Connection) -> List[str]:
     query = 'SELECT name FROM repos ORDER BY name'
     return [name for name, in db.execute(query).fetchall()]
 
 
-def list_packages(db):
+def list_packages(db: sqlite3.Connection) -> List[str]:
     query = 'SELECT DISTINCT key FROM packages ORDER BY key'
     return [key for key, in db.execute(query).fetchall()]
 
 
-def list_external(db):
+def list_external(db: sqlite3.Connection) -> List[str]:
     query = (
         'SELECT DISTINCT package_key FROM depends\n'
         'LEFT OUTER JOIN packages ON packages.key = depends.package_key\n'
@@ -45,7 +51,7 @@ def list_external(db):
 
 
 @app.route('/')
-def index():
+def index() -> str:
     with sqlite3.connect(app.database_path) as db:
         repos = list_repos(db)
         packages = list_packages(db)
@@ -55,13 +61,13 @@ def index():
     )
 
 
-def repo_packages(db, repo_name):
+def repo_packages(db: sqlite3.Connection, repo_name: str) -> List[Package]:
     query = 'SELECT * FROM packages WHERE repo_name = ? ORDER BY key'
     rows = db.execute(query, (repo_name,)).fetchall()
     return [Package(*row) for _, *row in rows]
 
 
-def repo_depends(db, repo_name):
+def repo_depends(db: sqlite3.Connection, repo_name: str) -> List[Depends]:
     query = (
         'SELECT * FROM depends WHERE repo_name = ?\n'
         'ORDER BY relationship, package_key'
@@ -70,7 +76,10 @@ def repo_depends(db, repo_name):
     return [Depends(*row) for _, *row in rows]
 
 
-def repo_rdepends(db, repo_name):
+def repo_rdepends(
+        db: sqlite3.Connection,
+        repo_name: str,
+) -> List[Tuple[str, Depends]]:
     query = (
         'SELECT depends.*\n'
         'FROM packages\n'
@@ -83,7 +92,7 @@ def repo_rdepends(db, repo_name):
 
 
 @app.route('/repo/<path:repo_name>.htm')
-def repo(repo_name):
+def repo(repo_name: str) -> str:
     repo_name = repo_name.rstrip('/')
 
     with sqlite3.connect(app.database_path) as db:
@@ -98,7 +107,7 @@ def repo(repo_name):
     )
 
 
-def package_repo_names(db, pkgname):
+def package_repo_names(db: sqlite3.Connection, pkgname: str) -> List[str]:
     query = (
         'SELECT DISTINCT repo_name\n'
         'FROM packages\n'
@@ -110,14 +119,17 @@ def package_repo_names(db, pkgname):
     return [repo_name for repo_name, in rows]
 
 
-def package_rdepends(db, pkgname):
+def package_rdepends(
+        db: sqlite3.Connection,
+        pkgname: str,
+) -> List[Tuple[str, Depends]]:
     query = 'SELECT * FROM depends WHERE package_key = ? ORDER BY repo_name'
     rows = db.execute(query, (pkgname,))
     return [(repo_name, Depends(*row)) for repo_name, *row in rows]
 
 
 @app.route('/pkg/<path:pkgname>.htm')
-def pkg(pkgname):
+def pkg(pkgname: str) -> str:
     with sqlite3.connect(app.database_path) as db:
         repo_names = package_repo_names(db, pkgname)
         if len(repo_names) == 1:
@@ -133,7 +145,7 @@ def pkg(pkgname):
             )
 
 
-def main(argv=None):  # pragma: no cover (never returns)
+def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
     parser = argparse.ArgumentParser()
     parser.add_argument('--database', default='database.db')
     parser.add_argument('-p', '--port', type=int, default=5000)
@@ -149,6 +161,7 @@ def main(argv=None):  # pragma: no cover (never returns)
         kwargs['threaded'] = False
 
     app.run('0.0.0.0', **kwargs)
+    raise AssertionError('unreachable')
 
 
 if __name__ == '__main__':

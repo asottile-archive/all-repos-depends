@@ -1,15 +1,18 @@
 import ast
 import os.path
+from typing import List
+from typing import Tuple
 
 from all_repos_depends.errors import DependsError
 from all_repos_depends.lang import python
+from all_repos_depends.types import Depends
 
 
 class FindsInstallRequires(ast.NodeVisitor):
-    def __init__(self):
-        self.requires = []
+    def __init__(self) -> None:
+        self.requires: List[Depends] = []
 
-    def visit_Call(self, node):
+    def visit_Call(self, node: ast.Call) -> None:
         if python.node_is_setup_call(node):
             for kwd in node.keywords:
                 if (
@@ -18,6 +21,7 @@ class FindsInstallRequires(ast.NodeVisitor):
                 ):
                     if all(isinstance(e, ast.Str) for e in kwd.value.elts):
                         for elt in kwd.value.elts:
+                            assert isinstance(elt, ast.Str)
                             req = python.to_depends('DEPENDS', elt.s)
                             self.requires.append(req)
                     else:
@@ -29,7 +33,7 @@ class FindsInstallRequires(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def setup_py():
+def setup_py() -> Tuple[Depends, ...]:
     if not os.path.exists('setup.py'):
         return ()
 
@@ -38,13 +42,13 @@ def setup_py():
     return tuple(visitor.requires)
 
 
-def requirements_tools():
+def requirements_tools() -> Tuple[Depends, ...]:
     reqs_minimal = 'requirements-minimal.txt'
     reqs = 'requirements.txt'
     reqs_dev_minimal = 'requirements-dev-minimal.txt'
     reqs_dev = 'requirements-dev.txt'
 
-    ret = []
+    ret: List[Depends] = []
     if os.path.exists(reqs_minimal) and os.path.exists(reqs):
         ret.extend(python.from_reqs_file('DEPENDS', reqs_minimal))
         ret.extend(python.from_reqs_file('REQUIRES', reqs))

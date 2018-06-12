@@ -27,6 +27,7 @@ exclude_lines =
 
     # Don't complain if non-runnable code isn't run:
     ^if __name__ == ['"]__main__['"]:$
+    -> NoReturn:
 
 [html]
 directory = coverage-html
