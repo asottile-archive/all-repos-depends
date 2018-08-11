@@ -1,4 +1,5 @@
 import json
+from typing import Any
 from typing import Callable
 from typing import NamedTuple
 from typing import Tuple
@@ -10,7 +11,7 @@ from all_repos_depends.types import Depends
 from all_repos_depends.types import Package
 
 
-def _fn(s: str) -> Callable:
+def _fn(s: str) -> Callable[..., Any]:
     mod, _, name = s.rpartition('.')
     return getattr(__import__(mod, fromlist=['_trash']), name)
 
