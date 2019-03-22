@@ -48,37 +48,43 @@ def generated(tmpdir_factory):
         r5.join('package.json').write('{"name": "pkg2"}')
 
     repos_json = repodir.join('repos.json')
-    repos_json.write(json.dumps({
-        'r1': str(r1), 'r2': str(r2), 'r3': str(r3), 'r4': str(r4),
-        'r5': str(r5),
-    }))
+    repos_json.write(
+        json.dumps({
+            'r1': str(r1), 'r2': str(r2), 'r3': str(r3), 'r4': str(r4),
+            'r5': str(r5),
+        }),
+    )
 
     all_repos = root.join('all_repos').ensure_dir()
     all_repos_cfg = all_repos.join('all-repos.json')
-    all_repos_cfg.write(json.dumps({
-        'output_dir': 'output',
-        'source': 'all_repos.source.json_file',
-        'source_settings': {'filename': str(repos_json)},
-        'push': 'all_repos.push.merge_to_master',
-        'push_settings': {},
-    }))
+    all_repos_cfg.write(
+        json.dumps({
+            'output_dir': 'output',
+            'source': 'all_repos.source.json_file',
+            'source_settings': {'filename': str(repos_json)},
+            'push': 'all_repos.push.merge_to_master',
+            'push_settings': {},
+        }),
+    )
     all_repos_cfg.chmod(0o600)
 
     assert not clone.main(('--config-filename', str(all_repos_cfg)))
 
     all_repos_depends = root.join('all_repos_depends').ensure_dir()
     all_repos_depends_cfg = all_repos_depends.join('all-repos-depends.json')
-    all_repos_depends_cfg.write(json.dumps({
-        'all_repos_config': str(all_repos_cfg),
-        'get_packages': [
-            'all_repos_depends.packages.setup_py',
-            'all_repos_depends.packages.package_json',
-        ],
-        'get_depends': [
-            'all_repos_depends.depends.setup_py',
-            'all_repos_depends.depends.requirements_tools',
-        ],
-    }))
+    all_repos_depends_cfg.write(
+        json.dumps({
+            'all_repos_config': str(all_repos_cfg),
+            'get_packages': [
+                'all_repos_depends.packages.setup_py',
+                'all_repos_depends.packages.package_json',
+            ],
+            'get_depends': [
+                'all_repos_depends.depends.setup_py',
+                'all_repos_depends.depends.requirements_tools',
+            ],
+        }),
+    )
     database_path = all_repos_depends.join('database.db')
 
     assert not generate.main((
