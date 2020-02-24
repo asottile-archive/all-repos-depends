@@ -25,9 +25,13 @@ exclude_lines =
     ^\s*return NotImplemented\b
     ^\s*raise$
 
+    # Ignore typing-related things
+    ^if (False|TYPE_CHECKING):
+    : \.\.\.$
+    -> ['"]?NoReturn['"]?:
+
     # Don't complain if non-runnable code isn't run:
     ^if __name__ == ['"]__main__['"]:$
-    -> NoReturn:
 
 [html]
 directory = coverage-html

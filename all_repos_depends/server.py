@@ -2,10 +2,10 @@ import argparse
 import sqlite3
 from typing import Any
 from typing import List
-from typing import NoReturn
 from typing import Optional
 from typing import Sequence
 from typing import Tuple
+from typing import TYPE_CHECKING
 
 import flask
 import mako.lookup
@@ -13,6 +13,9 @@ import pkg_resources
 
 from all_repos_depends.types import Depends
 from all_repos_depends.types import Package
+
+if TYPE_CHECKING:
+    from typing import NoReturn
 
 
 app = flask.Flask(__name__)
@@ -145,7 +148,7 @@ def pkg(pkgname: str) -> str:
             )
 
 
-def main(argv: Optional[Sequence[str]] = None) -> NoReturn:
+def main(argv: Optional[Sequence[str]] = None) -> 'NoReturn':
     parser = argparse.ArgumentParser()
     parser.add_argument('--database', default='database.db')
     parser.add_argument('-p', '--port', type=int, default=5000)
