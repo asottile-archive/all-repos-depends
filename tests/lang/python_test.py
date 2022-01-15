@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 from all_repos_depends.lang import python

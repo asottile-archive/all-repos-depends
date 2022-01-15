@@ -1,13 +1,12 @@
+from __future__ import annotations
+
 import argparse
 import os.path
 import sqlite3
 import tempfile
 import traceback
 from typing import Callable
-from typing import List
-from typing import Optional
 from typing import Sequence
-from typing import Tuple
 from typing import TypeVar
 
 from all_repos.autofix_lib import cwd
@@ -28,7 +27,7 @@ def get_repo_info(cfg: Config, repo_name: str, repo_path: str) -> Repo:
         errors = []
 
         def _each(
-                fns: Tuple[Callable[[], T], ...],
+                fns: tuple[Callable[[], T], ...],
                 augment: Callable[[T], None],
         ) -> None:
             for fn in fns:
@@ -40,9 +39,9 @@ def get_repo_info(cfg: Config, repo_name: str, repo_path: str) -> Repo:
                     if ret:
                         augment(ret)
 
-        packages: List[Package] = []
+        packages: list[Package] = []
         _each(cfg.get_packages, packages.append)
-        depends: List[Depends] = []
+        depends: list[Depends] = []
         _each(cfg.get_depends, depends.extend)
         return Repo(repo_name, tuple(packages), tuple(depends), tuple(errors))
 
@@ -80,7 +79,7 @@ def create_schema(db: sqlite3.Connection) -> None:
     )
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-C', '--config-filename',

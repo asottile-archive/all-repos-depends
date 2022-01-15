@@ -1,10 +1,9 @@
+from __future__ import annotations
+
 import argparse
 import sqlite3
 from typing import Any
-from typing import List
-from typing import Optional
 from typing import Sequence
-from typing import Tuple
 from typing import TYPE_CHECKING
 
 import flask
@@ -33,17 +32,17 @@ def render_template(template_name: str, **env: Any) -> str:
     return template.render(**env)
 
 
-def list_repos(db: sqlite3.Connection) -> List[str]:
+def list_repos(db: sqlite3.Connection) -> list[str]:
     query = 'SELECT name FROM repos ORDER BY name'
     return [name for name, in db.execute(query).fetchall()]
 
 
-def list_packages(db: sqlite3.Connection) -> List[str]:
+def list_packages(db: sqlite3.Connection) -> list[str]:
     query = 'SELECT DISTINCT key FROM packages ORDER BY key'
     return [key for key, in db.execute(query).fetchall()]
 
 
-def list_external(db: sqlite3.Connection) -> List[str]:
+def list_external(db: sqlite3.Connection) -> list[str]:
     query = (
         'SELECT DISTINCT package_key FROM depends\n'
         'LEFT OUTER JOIN packages ON packages.key = depends.package_key\n'
@@ -64,13 +63,13 @@ def index() -> str:
     )
 
 
-def repo_packages(db: sqlite3.Connection, repo_name: str) -> List[Package]:
+def repo_packages(db: sqlite3.Connection, repo_name: str) -> list[Package]:
     query = 'SELECT * FROM packages WHERE repo_name = ? ORDER BY key'
     rows = db.execute(query, (repo_name,)).fetchall()
     return [Package(*row) for _, *row in rows]
 
 
-def repo_depends(db: sqlite3.Connection, repo_name: str) -> List[Depends]:
+def repo_depends(db: sqlite3.Connection, repo_name: str) -> list[Depends]:
     query = (
         'SELECT * FROM depends WHERE repo_name = ?\n'
         'ORDER BY relationship, package_key'
@@ -82,7 +81,7 @@ def repo_depends(db: sqlite3.Connection, repo_name: str) -> List[Depends]:
 def repo_rdepends(
         db: sqlite3.Connection,
         repo_name: str,
-) -> List[Tuple[str, Depends]]:
+) -> list[tuple[str, Depends]]:
     query = (
         'SELECT depends.*\n'
         'FROM packages\n'
@@ -110,7 +109,7 @@ def repo(repo_name: str) -> str:
     )
 
 
-def package_repo_names(db: sqlite3.Connection, pkgname: str) -> List[str]:
+def package_repo_names(db: sqlite3.Connection, pkgname: str) -> list[str]:
     query = (
         'SELECT DISTINCT repo_name\n'
         'FROM packages\n'
@@ -125,7 +124,7 @@ def package_repo_names(db: sqlite3.Connection, pkgname: str) -> List[str]:
 def package_rdepends(
         db: sqlite3.Connection,
         pkgname: str,
-) -> List[Tuple[str, Depends]]:
+) -> list[tuple[str, Depends]]:
     query = 'SELECT * FROM depends WHERE package_key = ? ORDER BY repo_name'
     rows = db.execute(query, (pkgname,))
     return [(repo_name, Depends(*row)) for repo_name, *row in rows]
@@ -148,7 +147,7 @@ def pkg(pkgname: str) -> str:
             )
 
 
-def main(argv: Optional[Sequence[str]] = None) -> 'NoReturn':
+def main(argv: Sequence[str] | None = None) -> NoReturn:
     parser = argparse.ArgumentParser()
     parser.add_argument('--database', default='database.db')
     parser.add_argument('-p', '--port', type=int, default=5000)
