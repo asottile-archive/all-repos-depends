@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from typing import NamedTuple
-from typing import Tuple
 
 
 class Package(NamedTuple):
@@ -17,6 +18,6 @@ class Depends(NamedTuple):
 
 class Repo(NamedTuple):
     name: str
-    packages: Tuple[Package, ...]
-    depends: Tuple[Depends, ...]
-    errors: Tuple[str, ...]
+    packages: tuple[Package, ...]
+    depends: tuple[Depends, ...]
+    errors: tuple[str, ...]

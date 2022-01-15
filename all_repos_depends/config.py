@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 import json
 from typing import Any
 from typing import Callable
 from typing import NamedTuple
-from typing import Tuple
 
 from all_repos.config import Config as AllReposConfig
 from all_repos.config import load_config as all_repos_load_config
@@ -18,8 +19,8 @@ def _fn(s: str) -> Callable[..., Any]:
 
 class Config(NamedTuple):
     all_repos_config: AllReposConfig
-    get_packages: Tuple[Callable[[], Package], ...]
-    get_depends: Tuple[Callable[[], Tuple[Depends, ...]], ...]
+    get_packages: tuple[Callable[[], Package], ...]
+    get_depends: tuple[Callable[[], tuple[Depends, ...]], ...]
 
 
 def load_config(filename: str) -> Config:

@@ -1,7 +1,8 @@
+from __future__ import annotations
+
 import ast
 import json
 import os.path
-from typing import Optional
 
 from packaging.utils import canonicalize_name
 
@@ -23,7 +24,7 @@ class FindsPackageName(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def setup_py() -> Optional[Package]:
+def setup_py() -> Package | None:
     if not os.path.exists('setup.py'):
         return None
 
@@ -39,7 +40,7 @@ def setup_py() -> Optional[Package]:
         raise DependsError('Had setup.py but could not determine name')
 
 
-def package_json() -> Optional[Package]:
+def package_json() -> Package | None:
     if not os.path.exists('package.json'):
         return None
 

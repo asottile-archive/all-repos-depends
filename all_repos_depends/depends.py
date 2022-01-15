@@ -1,7 +1,7 @@
+from __future__ import annotations
+
 import ast
 import os.path
-from typing import List
-from typing import Tuple
 
 from all_repos_depends.errors import DependsError
 from all_repos_depends.lang import python
@@ -10,7 +10,7 @@ from all_repos_depends.types import Depends
 
 class FindsInstallRequires(ast.NodeVisitor):
     def __init__(self) -> None:
-        self.requires: List[Depends] = []
+        self.requires: list[Depends] = []
 
     def visit_Call(self, node: ast.Call) -> None:
         if python.node_is_setup_call(node):
@@ -33,7 +33,7 @@ class FindsInstallRequires(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def setup_py() -> Tuple[Depends, ...]:
+def setup_py() -> tuple[Depends, ...]:
     if not os.path.exists('setup.py'):
         return ()
 
@@ -42,13 +42,13 @@ def setup_py() -> Tuple[Depends, ...]:
     return tuple(visitor.requires)
 
 
-def requirements_tools() -> Tuple[Depends, ...]:
+def requirements_tools() -> tuple[Depends, ...]:
     reqs_minimal = 'requirements-minimal.txt'
     reqs = 'requirements.txt'
     reqs_dev_minimal = 'requirements-dev-minimal.txt'
     reqs_dev = 'requirements-dev.txt'
 
-    ret: List[Depends] = []
+    ret: list[Depends] = []
     if os.path.exists(reqs_minimal) and os.path.exists(reqs):
         ret.extend(python.from_reqs_file('DEPENDS', reqs_minimal))
         ret.extend(python.from_reqs_file('REQUIRES', reqs))

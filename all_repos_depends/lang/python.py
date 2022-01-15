@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import ast
 import os.path
 from typing import Iterable
