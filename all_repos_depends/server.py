@@ -3,8 +3,8 @@ from __future__ import annotations
 import argparse
 import sqlite3
 from typing import Any
+from typing import NoReturn
 from typing import Sequence
-from typing import TYPE_CHECKING
 
 import flask
 import mako.lookup
@@ -12,9 +12,6 @@ import pkg_resources
 
 from all_repos_depends.types import Depends
 from all_repos_depends.types import Package
-
-if TYPE_CHECKING:
-    from typing import NoReturn
 
 
 app = flask.Flask(__name__)
