@@ -12,7 +12,9 @@ View the dependencies of your repositories.
 
 ## Installation
 
-`pip install all-repos-depends`
+```bash
+pip install all-repos-depends
+```
 
 
 ## CLI
