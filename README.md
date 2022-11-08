@@ -1,3 +1,11 @@
+# DEPRECATED
+
+I never really finished this project -- and github dependencies kinda works?
+
+The original version of this project was much better but unfortunately was lost to closed source.
+
+___
+
 [![Build Status](https://dev.azure.com/asottile/asottile/_apis/build/status/asottile.all-repos-depends?branchName=main)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=34&branchName=main)
 [![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/asottile/asottile/34/main.svg)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=34&branchName=main)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/asottile/all-repos-depends/main.svg)](https://results.pre-commit.ci/latest/github/asottile/all-repos-depends/main)
